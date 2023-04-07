@@ -1,0 +1,2 @@
+# shitjs
+nodejs уровня /shit/
