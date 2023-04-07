@@ -5,7 +5,7 @@
 #include <vector>
 #include <thread>
 #include <sstream>
-#include "./core/json.h"
+#include "json.h"
 
 
 using namespace std;
