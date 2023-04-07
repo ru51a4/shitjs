@@ -5,24 +5,10 @@
 #include <vector>
 #include <thread>
 #include <sstream>
-
+#include "utils.h"
 
 using namespace std;
 
-void splitstring(const string& str,
-	char delimiter,
-	vector<string>& tokens)
-{
-	stringstream ss(str); //Create stringstream object
-	string word;// to store the token (splitted string)
-
-	while (getline(ss, word, delimiter).good())
-	{
-		tokens.push_back(word);
-	}
-	if (tokens.size() > 0)
-		tokens.push_back(word); // insert last token
-}
 
 namespace _json {
 
@@ -46,6 +32,29 @@ namespace _json {
 		map <string, string> values;
 		vector <string> valuesPrimitive;
 		string nodeType;
+		string _get(string str) {
+			vector<string> t;
+			_utils::utils::splitstring(str, '.', t);
+			node* curr = this;
+			for (const string item : t) {
+				if (_utils::utils::_is_number(item)) {
+					if (size(curr->valuesPrimitive) > 0) {
+						return curr->valuesPrimitive[stoi(item)];
+					}
+					else {
+						curr = curr->childrenArray[stoi(item)];
+					}
+				}
+				else {
+					if (curr->values.count(item)) {
+						return curr->values[item];
+					}
+					else {
+						curr = curr->children[item];
+					}
+				}
+			}
+		}
 	};
 
 
@@ -180,7 +189,7 @@ namespace _json {
 				}
 				else if (cToken->tokenType == "value") {
 					vector<string> c;
-					splitstring(cToken->value, ':', c);
+					_utils::utils::splitstring(cToken->value, ':', c);
 					tObj = stack.back();
 					tObj->values[c.front()] = c.back();
 				}
@@ -201,6 +210,6 @@ namespace _json {
 
 	//
 
-	
-	
+
+
 }

@@ -5,12 +5,10 @@
 #include <vector>
 #include <thread>
 #include <sstream>
-#include "json.cpp"
+#include "json.h"
 
 
 using namespace std;
-
-
 
 int main()
 {
@@ -24,5 +22,5 @@ int main()
 		}
 	}
 	_json::node* asd = _json::json::build(kek);
-	cout << "asd";
+	cout << asd->_get("menu.popup.menuitem.0.onclick");
 }
