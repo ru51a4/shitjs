@@ -32,14 +32,21 @@ namespace _json {
 		map <string, string> values;
 		vector <string> valuesPrimitive;
 		string nodeType;
-		string _get(string str) {
+		template<typename T> T _get(string str) {
 			vector<string> t;
-			_utils::utils::splitstring(str, '.', t);
+			if (!(str.find(".") != std::string::npos)) {
+				t.push_back(str);
+			}
+			else {
+				_utils::utils::splitstring(str, '.', t);
+			}
 			node* curr = this;
 			for (const string item : t) {
 				if (_utils::utils::_is_number(item)) {
 					if (size(curr->valuesPrimitive) > 0) {
-						return curr->valuesPrimitive[stoi(item)];
+						if constexpr (std::is_same_v<T, string>) {
+							return curr->valuesPrimitive[stoi(item)];
+						}
 					}
 					else {
 						curr = curr->childrenArray[stoi(item)];
@@ -47,12 +54,17 @@ namespace _json {
 				}
 				else {
 					if (curr->values.count(item)) {
-						return curr->values[item];
+						if constexpr (std::is_same_v<T, string>) {
+							return curr->values[item];
+						}
 					}
 					else {
 						curr = curr->children[item];
 					}
 				}
+			}
+			if constexpr (!std::is_same_v<T, string>) {
+				return curr;
 			}
 		}
 	};

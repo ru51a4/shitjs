@@ -22,5 +22,10 @@ int main()
 		}
 	}
 	_json::node* asd = _json::json::build(kek);
-	cout << asd->_get("menu.popup.menuitem.0.onclick");
+	_json::node* a = asd->_get<_json::node*>("menu.popup.menuitem");
+	for (int i = 0; i <= size(a->childrenArray)-1; i++) {
+		cout << a->childrenArray[i]->_get<string>("onclick");
+
+	}
+
 }
