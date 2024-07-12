@@ -1,2 +1,2 @@
 # shitjs
-nodejs уровня /shit/
+javascript engine
