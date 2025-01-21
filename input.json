@@ -4,6 +4,10 @@
         "value": "File",
         "popup": {
             "menuitem": [
+                [
+                    1,
+                    2
+                ],
                 {
                     "value": "New",
                     "onclick": "CreateNewDoc()"

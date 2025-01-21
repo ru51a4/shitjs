@@ -282,7 +282,13 @@ namespace _json
 				}
 				else if (cToken->tokenType == "openArrayPrimitive")
 				{
-					// todo
+					node *cNode = new node;
+					cNode->children = {};
+					cNode->values = {};
+					tObj = stack.back();
+					stack.push_back(cNode);
+					cNode->nodeType = "array";
+					tObj->childrenArray.push_back(cNode);
 				}
 				else if (cToken->tokenType == "primitive")
 				{
