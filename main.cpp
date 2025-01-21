@@ -14,8 +14,11 @@ int main()
 {
 	string json = _http::get("https://www.cbr-xml-daily.ru/latest.js");
 	_json::node *myfuckingjsonparser = _json::json::build(json);
-	cout << myfuckingjsonparser->_get<string>("date") << ": \n";
-	cout << "1 usd - " << 1 / stod(myfuckingjsonparser->_get<string>("rates.USD")) << "rub" << "\n";
+	_json::json_primitive *date = myfuckingjsonparser->_get<_json::json_primitive *>("date");
+	cout << date->value << " ";
+	cout << "(" << _json::JSON_DATA_TYPE_STRING.at(date->dataType) << ")" << "\n";
+
+	cout << "1 usd - " << 1 / stod(myfuckingjsonparser->_get<_json::json_primitive *>("rates.USD")->value) << "rub" << "\n";
 	return 0;
 	/*
 	ifstream myfile("input.json");
