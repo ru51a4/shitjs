@@ -11,14 +11,24 @@ using namespace std;
 
 namespace _json
 {
+	enum class token_type
+	{
+		openObj,
+		open,
+		openArray,
+		openArrayPrimitive,
+		value,
+		primitive,
+		closed
+	};
 
 	class token
 	{
 	public:
 		string value;
-		string tokenType;
+		token_type tokenType;
 		string valueKey;
-		token(string _value, string _tokenType, string _valueKey = "")
+		token(string _value, token_type _tokenType, string _valueKey = "")
 		{
 			this->value = _value;
 			this->tokenType = _tokenType;
@@ -166,25 +176,25 @@ namespace _json
 				}
 				if (cChar == '{')
 				{
-					token *_c = new token(t, string("openObj"));
+					token *_c = new token(t, token_type::openObj);
 					res.push_back(_c);
 					t = "";
 				}
 				else if (cChar == ':' && getNextChar(0, '{'))
 				{
-					token *_c = new token(t, string("open"));
+					token *_c = new token(t, token_type::open);
 					res.push_back(_c);
 					t = "";
 				}
 				else if (cChar == ':' && getNextChar(0, '['))
 				{
-					token *_c = new token(t, string("openArray"));
+					token *_c = new token(t, token_type::openArray);
 					res.push_back(_c);
 					t = "";
 				}
 				else if (cChar == '[')
 				{
-					token *_c = new token(t, string("openArrayPrimitive"));
+					token *_c = new token(t, token_type::openArrayPrimitive);
 					res.push_back(_c);
 					t = "";
 				}
@@ -194,7 +204,7 @@ namespace _json
 					{
 						if (isComma)
 						{
-							token *_c = new token(t, string("value"), valueKey);
+							token *_c = new token(t, token_type::value, valueKey);
 							res.push_back(_c);
 
 							isComma = false;
@@ -203,14 +213,14 @@ namespace _json
 						}
 						else
 						{
-							token *_c = new token(t, string("primitive"));
+							token *_c = new token(t, token_type::primitive);
 							res.push_back(_c);
 							t = "";
 						}
 					}
 					if ((cChar == '}' || cChar == ']'))
 					{
-						token *_c = new token("", string("closed"));
+						token *_c = new token("", token_type::closed);
 						res.push_back(_c);
 					}
 				}
@@ -228,9 +238,9 @@ namespace _json
 		{
 			vector<node *> stack;
 			node *tObj;
-			string initToken = (*tokens.front()).tokenType;
+			token_type initToken = (*tokens.front()).tokenType;
 			tokens.erase(tokens.begin());
-			if (initToken == "openObj")
+			if (initToken == token_type::openObj)
 			{
 				node *cNode = new node();
 				cNode->nodeType = "object";
@@ -244,7 +254,7 @@ namespace _json
 
 			for (const token *cToken : tokens)
 			{
-				if (cToken->tokenType == "open")
+				if (cToken->tokenType == token_type::open)
 				{
 					node *cNode = new node;
 					cNode->children = {};
@@ -254,7 +264,7 @@ namespace _json
 					cNode->nodeType = "object";
 					tObj->children[cToken->value] = cNode;
 				}
-				else if (cToken->tokenType == "openObj")
+				else if (cToken->tokenType == token_type::openObj)
 				{
 
 					node *cNode = new node;
@@ -265,12 +275,12 @@ namespace _json
 					cNode->nodeType = "object";
 					tObj->childrenArray.push_back(cNode);
 				}
-				else if (cToken->tokenType == "value")
+				else if (cToken->tokenType == token_type::value)
 				{
 					tObj = stack.back();
 					tObj->values[cToken->valueKey] = cToken->value;
 				}
-				else if (cToken->tokenType == "openArray")
+				else if (cToken->tokenType == token_type::openArray)
 				{
 					node *cNode = new node;
 					cNode->children = {};
@@ -280,7 +290,7 @@ namespace _json
 					cNode->nodeType = "array";
 					tObj->children[cToken->value] = cNode;
 				}
-				else if (cToken->tokenType == "openArrayPrimitive")
+				else if (cToken->tokenType == token_type::openArrayPrimitive)
 				{
 					node *cNode = new node;
 					cNode->children = {};
@@ -290,12 +300,12 @@ namespace _json
 					cNode->nodeType = "array";
 					tObj->childrenArray.push_back(cNode);
 				}
-				else if (cToken->tokenType == "primitive")
+				else if (cToken->tokenType == token_type::primitive)
 				{
 					tObj = stack.back();
 					tObj->valuesPrimitive.push_back(cToken->value);
 				}
-				else if (cToken->tokenType == "closed" && size(stack) > 1)
+				else if (cToken->tokenType == token_type::closed && size(stack) > 1)
 				{
 					stack.pop_back();
 				}

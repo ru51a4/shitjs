@@ -28,4 +28,7 @@ int main()
 	{
 		cout << a->childrenArray[i]->_get<string>("onclick") << "\n";
 	}
+	_json::node *arr = asd->_get<_json::node *>("menu.arr");
+
+	cout << arr->childrenArray[0]->valuesPrimitive[1] << "\n";
 }
