@@ -199,11 +199,13 @@ namespace _json
 
 							isComma = false;
 							valueKey = "";
+							t = "";
 						}
 						else
 						{
 							token *_c = new token(t, string("primitive"));
 							res.push_back(_c);
+							t = "";
 						}
 					}
 					if ((cChar == '}' || cChar == ']'))
