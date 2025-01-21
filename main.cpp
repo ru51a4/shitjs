@@ -6,11 +6,18 @@
 #include <thread>
 #include <sstream>
 #include "json.h"
+#include "http.h"
 
 using namespace std;
 
 int main()
 {
+	string json = _http::get("https://www.cbr-xml-daily.ru/latest.js");
+	_json::node *myfuckingjsonparser = _json::json::build(json);
+	cout << myfuckingjsonparser->_get<string>("date") << ": \n";
+	cout << "1 usd - " << 1 / stod(myfuckingjsonparser->_get<string>("rates.USD")) << "rub" << "\n";
+	return 0;
+	/*
 	ifstream myfile("input.json");
 	string kek;
 	if (myfile.is_open())
@@ -31,4 +38,5 @@ int main()
 	_json::node *arr = asd->_get<_json::node *>("menu.arr");
 
 	cout << arr->childrenArray[0]->valuesPrimitive[1] << "\n";
+	*/
 }
