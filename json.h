@@ -317,7 +317,11 @@ namespace _json
 			}
 			else
 			{
-				// todo
+				node *cNode = new node;
+				cNode->children = {};
+				cNode->values = {};
+				cNode->nodeType = "array";
+				stack.push_back(cNode);
 			}
 
 			for (const token *cToken : tokens)
